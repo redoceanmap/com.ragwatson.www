@@ -1,5 +1,5 @@
 import { getToken } from "./auth";
-import type { LogEntry, LoginResponse } from "./types";
+import type { LoginResponse } from "./types";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
@@ -48,20 +48,18 @@ export const api = {
       false,
     ),
 
+  register: (email: string, password: string, name: string) =>
+    request<LoginResponse>(
+      "/auth/register",
+      { method: "POST", body: JSON.stringify({ email, password, name }) },
+      false,
+    ),
+
   chat: (message: string, sessionId: string) =>
     request<{ reply: string }>(
       "/chat",
       { method: "POST", body: JSON.stringify({ message, session_id: sessionId }) },
     ),
-
-  logs: (params: { endpoint?: string; from?: string; to?: string } = {}) => {
-    const search = new URLSearchParams();
-    if (params.endpoint) search.set("endpoint", params.endpoint);
-    if (params.from) search.set("from", params.from);
-    if (params.to) search.set("to", params.to);
-    const qs = search.toString();
-    return request<LogEntry[]>(`/logs${qs ? `?${qs}` : ""}`);
-  },
 
   titanic: {
     count: () => request<{ count: number }>("/titanic/count"),
