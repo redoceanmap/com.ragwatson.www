@@ -25,6 +25,10 @@ html, body {
   -webkit-font-smoothing: none;
   font-smooth: never;
   image-rendering: pixelated;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 /* 밤하늘 별 배경 */
@@ -82,35 +86,71 @@ html, body {
     0 0 16px rgba(255, 200, 87, 0.4);
 }
 
-/* 타이타닉 항해 + 침몰 */
+/* 타이타닉 항해 + 침몰
+   transform-origin "30% 90%" (선미 쪽 하단 근처)를 축으로 양수 회전 →
+   뱃머리(우측)가 아래로 잠기고 선미(좌측)는 살짝 들리는 자연스러운 침몰 모양. */
 @keyframes sail-and-sink {
-  0%   { transform: translateX(-130%) translateY(0) rotate(0deg); opacity: 0; }
-  6%   { opacity: 1; }
-  55%  { transform: translateX(calc(66vw - 50%)) translateY(0) rotate(0deg); opacity: 1; }
-  62%  { transform: translateX(calc(66vw - 50%)) translateY(-2px) rotate(-3deg); opacity: 1; }
-  70%  { transform: translateX(calc(66vw - 50%)) translateY(8px) rotate(-15deg); opacity: 1; }
-  82%  { transform: translateX(calc(66vw - 50%)) translateY(60px) rotate(-35deg); opacity: 1; }
-  92%  { transform: translateX(calc(66vw - 50%)) translateY(180px) rotate(-60deg); opacity: 0.4; }
-  96%  { transform: translateX(calc(66vw - 50%)) translateY(280px) rotate(-78deg); opacity: 0; }
-  100% { transform: translateX(-130%) translateY(0) rotate(0deg); opacity: 0; }
+  0%   { transform: translateX(-130%) translateY(0) rotate(0); opacity: 0; }
+  6%   { transform: translateX(-100%) translateY(0) rotate(0); opacity: 1; }
+  55%  { transform: translateX(calc(66vw - 50%)) translateY(0) rotate(0); opacity: 1; }
+  62%  { transform: translateX(calc(66vw - 50%)) translateY(2px) rotate(2deg); opacity: 1; }   /* 충돌 후 살짝 기움 */
+  70%  { transform: translateX(calc(66vw - 50%)) translateY(6px) rotate(6deg); opacity: 1; }
+  78%  { transform: translateX(calc(66vw - 50%)) translateY(18px) rotate(15deg); opacity: 1; }  /* 뱃머리 잠기기 시작 */
+  85%  { transform: translateX(calc(66vw - 50%)) translateY(45px) rotate(28deg); opacity: 1; }
+  90%  { transform: translateX(calc(66vw - 50%)) translateY(95px) rotate(40deg); opacity: 0.7; } /* 거의 수직에 가까움 */
+  95%  { transform: translateX(calc(66vw - 50%)) translateY(180px) rotate(50deg); opacity: 0; }  /* 완전 침몰 */
+  100% { transform: translateX(-130%) translateY(0) rotate(0); opacity: 0; }
 }
 
-/* 충돌 직후 빙산 흔들림 */
+/* 충돌 직후 빙산 흔들림 - 배가 도착하는 55% 시점에 맞춤 */
 @keyframes iceberg-shake {
-  0%, 60%, 100% { transform: translateX(0); }
-  62% { transform: translateX(-3px) translateY(-2px); }
-  64% { transform: translateX(4px) translateY(1px); }
-  66% { transform: translateX(-2px); }
-  68% { transform: translateX(2px); }
-  70% { transform: translateX(0); }
+  0%, 55%, 61%, 100% { transform: translateX(0); }
+  56% { transform: translateX(-3px) translateY(-2px); }
+  57% { transform: translateX(4px) translateY(1px); }
+  58% { transform: translateX(-2px) translateY(-1px); }
+  59% { transform: translateX(3px); }
+  60% { transform: translateX(-1px); }
 }
 
-/* 침몰 지점 물보라 */
-@keyframes splash {
-  0%, 60%, 100% { opacity: 0; transform: scaleY(0.2); }
-  68% { opacity: 0.8; transform: scaleY(1.1); }
-  78% { opacity: 0.6; transform: scaleY(1.4); }
-  90% { opacity: 0.2; transform: scaleY(0.6); }
+/* 충돌 폭발 - 배가 빙산에 도착하는 55% 시점에 짧고 강하게 한 번 */
+@keyframes explosion {
+  0%, 55%, 60%, 100% { opacity: 0; transform: scale(0) rotate(0deg); filter: brightness(1); }
+  56%                { opacity: 1; transform: scale(0.4) rotate(0deg); filter: brightness(1.8); }
+  57%                { opacity: 1; transform: scale(1.0) rotate(10deg); filter: brightness(1.6); }
+  58%                { opacity: 0.9; transform: scale(1.25) rotate(-5deg); filter: brightness(1.3); }
+  59%                { opacity: 0; transform: scale(1.4) rotate(0deg); filter: brightness(1); }
+}
+
+/* 폭발 잔광 (충돌 후 빛 번짐) - 짧게 페이드 */
+@keyframes explosion-aftershock {
+  0%, 56%, 62%, 100% { opacity: 0; transform: scale(0.4); }
+  57%                { opacity: 0.7; transform: scale(0.9); }
+  59%                { opacity: 0.4; transform: scale(1.3); }
+  61%                { opacity: 0; transform: scale(1.7); }
+}
+
+/* 충돌 직후 배 가운데 균열이 점차 드러남 */
+@keyframes ship-crack {
+  0%, 60% { opacity: 0; }
+  64%     { opacity: 0.5; }
+  72%     { opacity: 1; }
+  95%     { opacity: 1; }
+  100%    { opacity: 0; }
+}
+
+/* tailwind 빌드 의존성 없이 바로 적용되도록 utility class 직접 정의 */
+.animate-explosion {
+  animation: explosion 22s ease-in-out infinite;
+}
+.animate-explosion-aftershock {
+  animation: explosion-aftershock 22s ease-in-out infinite;
+}
+.animate-ship-crack {
+  animation: ship-crack 22s ease-in-out infinite;
+}
+.animate-fire-flicker {
+  animation: fire-flicker 0.6s ease-in-out infinite;
+  transform-origin: center bottom;
 }
 
 /* 깜빡이는 커서 효과 */

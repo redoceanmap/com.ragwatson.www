@@ -1,8 +1,16 @@
 /**
- * 8-bit 픽셀 아트 타이타닉 (가라앉는 모습)
- * 1픽셀 = SVG 4 단위. 각 사각형이 한 "픽셀" 역할.
+ * 타이타닉을 좌측(stern, 선미)과 우측(bow, 선수) 절반으로 잘라 그리는 컴포넌트.
+ * 두 인스턴스를 같은 위치에 겹쳐서 합치면 원본 PixelTitanic과 동일.
+ * 분리면(x=160)에 부서진 단면 + 화염 픽셀을 추가해 두 동강 난 모습을 표현.
  */
-export default function PixelTitanic({ className = "" }: { className?: string }) {
+export default function PixelTitanicHalf({
+  side,
+  className = "",
+}: {
+  side: "stern" | "bow";
+  className?: string;
+}) {
+  const clipId = `titanic-clip-${side}`;
   return (
     <svg
       viewBox="0 14 320 138"
@@ -10,8 +18,18 @@ export default function PixelTitanic({ className = "" }: { className?: string })
       className={className}
       aria-hidden
     >
-      <g>
-        {/* 4개의 굴뚝 (funnel) - 검은 띠 + 노랑 몸체 */}
+      <defs>
+        <clipPath id={clipId}>
+          {side === "stern" ? (
+            <rect x="0" y="14" width="160" height="138" />
+          ) : (
+            <rect x="160" y="14" width="160" height="138" />
+          )}
+        </clipPath>
+      </defs>
+
+      <g clipPath={`url(#${clipId})`}>
+        {/* 4개의 굴뚝 */}
         <Funnel x={100} />
         <Funnel x={140} />
         <Funnel x={180} />
@@ -22,16 +40,16 @@ export default function PixelTitanic({ className = "" }: { className?: string })
         <Smoke x={144} />
         <Smoke x={184} />
 
-        {/* 상부 갑판 (light deck) */}
+        {/* 상부 갑판 */}
         <rect x="60" y="84" width="220" height="8" fill="#1A1A2E" />
 
         {/* 메인 선체 */}
         <rect x="40" y="92" width="260" height="32" fill="#0A0E1A" />
 
-        {/* 선체 측면 흰 라인 */}
+        {/* 선체 측면 라인 */}
         <rect x="40" y="92" width="260" height="2" fill="#3A4458" />
 
-        {/* 뱃머리 (오른쪽 끝, 삼각형 픽셀) */}
+        {/* 뱃머리 (오른쪽 끝) */}
         <rect x="300" y="96" width="4" height="24" fill="#0A0E1A" />
         <rect x="304" y="100" width="4" height="16" fill="#0A0E1A" />
         <rect x="308" y="104" width="4" height="8" fill="#0A0E1A" />
@@ -40,7 +58,7 @@ export default function PixelTitanic({ className = "" }: { className?: string })
         <rect x="36" y="100" width="4" height="20" fill="#0A0E1A" />
         <rect x="32" y="104" width="4" height="14" fill="#0A0E1A" />
 
-        {/* 포트홀 창문들 (따뜻한 노랑 불빛) - 위쪽 줄 */}
+        {/* 포트홀 - 위쪽 줄 */}
         {Array.from({ length: 26 }).map((_, i) => (
           <rect
             key={`p1-${i}`}
@@ -75,29 +93,13 @@ export default function PixelTitanic({ className = "" }: { className?: string })
           />
         ))}
 
-        {/* 마스트 (앞뒤 기둥) */}
+        {/* 마스트 */}
         <rect x="60" y="60" width="2" height="32" fill="#1A1A2E" />
         <rect x="280" y="60" width="2" height="32" fill="#1A1A2E" />
-
-        {/* 충돌 후 가운데 균열 - 침몰 시점에만 보임 (가는 지그재그 라인 + 작은 화염) */}
-        <g className="animate-ship-crack">
-          {/* 갑판 위쪽 균열 */}
-          <rect x="159" y="84" width="2" height="4" fill="#0A0E1A" />
-          {/* 선체 중앙 지그재그 균열 */}
-          <rect x="158" y="92" width="2" height="6" fill="#1A1A2E" />
-          <rect x="160" y="98" width="2" height="6" fill="#1A1A2E" />
-          <rect x="158" y="104" width="2" height="8" fill="#1A1A2E" />
-          <rect x="160" y="112" width="2" height="8" fill="#1A1A2E" />
-          <rect x="158" y="120" width="2" height="4" fill="#1A1A2E" />
-          {/* 균열 사이로 새는 화염/잔불 */}
-          <rect x="160" y="94" width="2" height="2" fill="#FF6B35" />
-          <rect x="158" y="108" width="2" height="2" fill="#E94560" />
-          <rect x="160" y="118" width="2" height="2" fill="#FFC857" />
-        </g>
       </g>
 
-      {/* 물에 비친 반사 (흐릿한 노랑) */}
-      <g opacity="0.4">
+      {/* 물에 비친 반사 (clip 안에서 함께) */}
+      <g clipPath={`url(#${clipId})`} opacity="0.4">
         <rect x="60" y="138" width="200" height="2" fill="#FFC857" />
         <rect x="80" y="142" width="160" height="2" fill="#FF8C42" />
         <rect x="100" y="146" width="120" height="2" fill="#FFC857" />
@@ -110,11 +112,8 @@ export default function PixelTitanic({ className = "" }: { className?: string })
 function Funnel({ x }: { x: number }) {
   return (
     <g>
-      {/* 굴뚝 몸체 (오렌지/황토) */}
       <rect x={x} y="50" width="14" height="36" fill="#C97A3D" />
-      {/* 검은 띠 (위) */}
       <rect x={x} y="50" width="14" height="6" fill="#0A0E1A" />
-      {/* 안쪽 그림자 */}
       <rect x={x + 10} y="50" width="4" height="36" fill="#8B5520" />
     </g>
   );

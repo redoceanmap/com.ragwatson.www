@@ -1,5 +1,6 @@
 import PixelTitanic from "@/components/PixelTitanic";
 import PixelIceberg from "@/components/PixelIceberg";
+import PixelExplosion from "@/components/PixelExplosion";
 
 const STARS = [
   { top: "8%", left: "12%", size: 4, delay: "0s" },
@@ -71,33 +72,47 @@ export default function HomePage() {
         </p>
       </div>
 
-      {/* 항해 + 침몰하는 타이타닉 (애니메이션) */}
-      <div className="absolute bottom-24 left-0 right-0 h-32 z-10 pointer-events-none overflow-hidden">
+      {/* 항해 + 뱃머리부터 잠기는 타이타닉 */}
+      <div className="absolute bottom-16 left-0 right-0 h-56 z-10 pointer-events-none overflow-hidden">
         <div
-          className="absolute bottom-0 w-72 sm:w-[28rem] animate-sail-sink"
-          style={{ left: 0, transformOrigin: "70% 80%" }}
+          className="absolute bottom-0 w-80 sm:w-[32rem] animate-sail-sink"
+          style={{ left: 0, transformOrigin: "30% 90%" }}
         >
-          <PixelTitanic className="w-full" />
+          <PixelTitanic className="w-full block" />
         </div>
       </div>
 
       {/* 빙산 (2/3 지점, 충돌 위치) */}
       <div
-        className="absolute bottom-28 w-16 sm:w-24 z-20 opacity-95 animate-iceberg-shake"
-        style={{ left: "calc(66vw - 3rem)" }}
+        className="absolute bottom-20 w-28 sm:w-44 z-20 opacity-95 animate-iceberg-shake"
+        style={{ left: "calc(66vw - 5.5rem)" }}
       >
         <PixelIceberg className="w-full" />
       </div>
 
-      {/* 침몰 지점 물보라 */}
+      {/* 충돌 폭발 효과 (배 ↔ 빙산) */}
       <div
-        className="absolute bottom-28 z-20 pointer-events-none animate-splash origin-bottom"
-        style={{ left: "calc(66vw - 1.5rem)" }}
+        className="absolute bottom-20 w-24 sm:w-40 z-30 pointer-events-none"
+        style={{
+          left: "calc(66vw - 5rem)",
+          filter:
+            "drop-shadow(0 0 18px rgba(255,140,66,0.7)) drop-shadow(0 0 36px rgba(233,69,96,0.4))",
+        }}
       >
-        <div className="w-3 h-8 bg-ocean-foam mb-1 inline-block mx-0.5" />
-        <div className="w-3 h-12 bg-ocean-foam mb-1 inline-block mx-0.5" />
-        <div className="w-3 h-6 bg-ocean-foam mb-1 inline-block mx-0.5" />
+        <div className="animate-explosion origin-center">
+          <PixelExplosion className="w-full" />
+        </div>
       </div>
+
+      {/* 폭발 잔광 (붉은 빛 번짐) */}
+      <div
+        className="absolute bottom-16 w-40 sm:w-56 h-40 sm:h-56 z-10 pointer-events-none animate-explosion-aftershock"
+        style={{
+          left: "calc(66vw - 7rem)",
+          background:
+            "radial-gradient(circle, rgba(255,200,87,0.55) 0%, rgba(255,107,53,0.35) 30%, rgba(233,69,96,0.15) 55%, transparent 75%)",
+        }}
+      />
 
       {/* 바다 (하단) */}
       <div className="absolute bottom-0 left-0 right-0 h-32 moonlight-water border-t-4 border-black overflow-hidden">
