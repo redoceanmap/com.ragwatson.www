@@ -8,6 +8,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // === pixel (ragwatson) ===
         canvas: "#0B1E3F",
         night: {
           DEFAULT: "#0B1E3F",
@@ -38,20 +39,37 @@ const config: Config = {
         hull: "#0A0E1A",
         muted: "#8AA0C0",
         border: "#000000",
+        // === glass (portfolio) ===
+        glass: {
+          surface: "rgba(255, 255, 255, 0.08)",
+          border: "rgba(255, 255, 255, 0.18)",
+          highlight: "rgba(255, 255, 255, 0.35)",
+        },
       },
       fontFamily: {
-        sans: ["var(--font-noto)", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "var(--font-noto)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "var(--font-sans)", "sans-serif"],
         pixel: ["var(--font-press-start)", "Galmuri11", "Galmuri14", "var(--font-noto)", "monospace"],
         "pixel-kr": ["Galmuri11", "Galmuri14", "var(--font-noto)", "monospace"],
       },
+      backdropBlur: {
+        xs: "2px",
+      },
       boxShadow: {
+        // pixel
         pixel: "4px 4px 0 0 #000000",
         "pixel-sm": "2px 2px 0 0 #000000",
         "pixel-lg": "6px 6px 0 0 #000000",
         glow: "0 0 0 4px #000, 0 0 24px rgba(255,200,87,0.6)",
-        "porthole": "inset 0 0 0 4px #000, 0 0 16px rgba(255,140,66,0.4)",
+        porthole: "inset 0 0 0 4px #000, 0 0 16px rgba(255,140,66,0.4)",
+        // glass
+        glass:
+          "inset 0 1px 0 0 rgba(255,255,255,0.25), inset 0 -1px 0 0 rgba(255,255,255,0.05), 0 10px 40px -10px rgba(0,0,0,0.45)",
+        "glass-sm":
+          "inset 0 1px 0 0 rgba(255,255,255,0.22), 0 4px 16px -4px rgba(0,0,0,0.35)",
       },
       keyframes: {
+        // pixel
         twinkle: {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.3" },
@@ -66,8 +84,18 @@ const config: Config = {
           "0%, 100%": { transform: "translateX(0)" },
           "50%": { transform: "translateX(-16px)" },
         },
+        // glass
+        "float-slow": {
+          "0%, 100%": { transform: "translate3d(0,0,0) scale(1)" },
+          "50%": { transform: "translate3d(20px,-30px,0) scale(1.05)" },
+        },
+        "float-slower": {
+          "0%, 100%": { transform: "translate3d(0,0,0) scale(1)" },
+          "50%": { transform: "translate3d(-30px,20px,0) scale(1.08)" },
+        },
       },
       animation: {
+        // pixel
         twinkle: "twinkle 2s ease-in-out infinite",
         "twinkle-slow": "twinkle 3.5s ease-in-out infinite",
         flicker: "flicker 4s ease-in-out infinite",
@@ -76,6 +104,9 @@ const config: Config = {
         "iceberg-shake": "iceberg-shake 22s ease-in-out infinite",
         explosion: "explosion 22s ease-in-out infinite",
         "explosion-aftershock": "explosion-aftershock 22s ease-in-out infinite",
+        // glass
+        "float-slow": "float-slow 14s ease-in-out infinite",
+        "float-slower": "float-slower 18s ease-in-out infinite",
       },
     },
   },

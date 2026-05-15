@@ -56,10 +56,21 @@ export const api = {
     ),
 
   chat: (message: string, sessionId: string) =>
-    request<{ reply: string }>(
+    request<{ reply?: string; error?: string }>(
       "/chat",
       { method: "POST", body: JSON.stringify({ message, session_id: sessionId }) },
     ),
+
+  weather: (lat: number, lon: number) =>
+    request<{
+      city?: string;
+      temp?: number;
+      feels_like?: number;
+      description?: string;
+      icon?: string;
+      humidity?: number;
+      error?: string;
+    }>(`/weather?lat=${lat}&lon=${lon}`, { method: "GET" }, false),
 
   titanic: {
     count: () => request<{ count: number }>("/titanic/count"),

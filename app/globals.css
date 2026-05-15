@@ -1,8 +1,10 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 한글 픽셀 폰트 — Galmuri11 (한글 + 라틴 모두 픽셀 스타일) */
+/* 한글 픽셀 폰트 — Galmuri11/14 (한글 + 라틴 모두 픽셀 스타일) */
 @font-face {
   font-family: "Galmuri11";
   src: url("https://cdn.jsdelivr.net/gh/quiple/galmuri/dist/Galmuri11.woff2") format("woff2");
@@ -19,17 +21,96 @@
   font-display: swap;
 }
 
-html, body {
-  background: #050E22;
-  color: #F0EFE7;
-  -webkit-font-smoothing: none;
-  font-smooth: never;
-  image-rendering: pixelated;
+:root {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI",
+    Roboto, sans-serif;
+  --font-display: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+}
+
+html,
+body {
+  background-color: #05060a;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
   width: 100%;
   margin: 0;
   padding: 0;
+}
+
+body {
+  min-height: 100dvh;
   overflow-x: hidden;
 }
+
+::selection {
+  background: rgba(180, 200, 255, 0.35);
+  color: #fff;
+}
+
+/* === Liquid Glass (portfolio) === */
+@layer components {
+  .glass-surface {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.04) 60%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.28),
+      inset 0 -1px 0 0 rgba(255, 255, 255, 0.04),
+      0 12px 40px -12px rgba(0, 0, 0, 0.55);
+  }
+
+  .glass-surface-soft {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.03) 100%
+    );
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+      0 8px 24px -8px rgba(0, 0, 0, 0.4);
+  }
+
+  .glass-highlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.45),
+      rgba(255, 255, 255, 0) 40%,
+      rgba(255, 255, 255, 0) 60%,
+      rgba(255, 255, 255, 0.18)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* === Pixel Retro (ragwatson) === */
 
 /* 밤하늘 별 배경 */
 .starfield {
@@ -61,7 +142,7 @@ html, body {
   background-size: 32px 32px, 32px 32px, 32px 32px;
 }
 
-/* 달 빛이 바다에 반사되는 그라디언트 */
+/* 달빛이 바다에 반사되는 그라디언트 */
 .moonlight-water {
   background:
     radial-gradient(ellipse 200px 60px at 50% 0%, rgba(255,200,87,0.35), transparent 70%),
@@ -86,23 +167,20 @@ html, body {
     0 0 16px rgba(255, 200, 87, 0.4);
 }
 
-/* 타이타닉 항해 + 침몰
-   transform-origin "30% 90%" (선미 쪽 하단 근처)를 축으로 양수 회전 →
-   뱃머리(우측)가 아래로 잠기고 선미(좌측)는 살짝 들리는 자연스러운 침몰 모양. */
+/* 타이타닉 항해 + 침몰 */
 @keyframes sail-and-sink {
   0%   { transform: translateX(-130%) translateY(0) rotate(0); opacity: 0; }
   6%   { transform: translateX(-100%) translateY(0) rotate(0); opacity: 1; }
   55%  { transform: translateX(calc(66vw - 50%)) translateY(0) rotate(0); opacity: 1; }
-  62%  { transform: translateX(calc(66vw - 50%)) translateY(2px) rotate(2deg); opacity: 1; }   /* 충돌 후 살짝 기움 */
+  62%  { transform: translateX(calc(66vw - 50%)) translateY(2px) rotate(2deg); opacity: 1; }
   70%  { transform: translateX(calc(66vw - 50%)) translateY(6px) rotate(6deg); opacity: 1; }
-  78%  { transform: translateX(calc(66vw - 50%)) translateY(18px) rotate(15deg); opacity: 1; }  /* 뱃머리 잠기기 시작 */
+  78%  { transform: translateX(calc(66vw - 50%)) translateY(18px) rotate(15deg); opacity: 1; }
   85%  { transform: translateX(calc(66vw - 50%)) translateY(45px) rotate(28deg); opacity: 1; }
-  90%  { transform: translateX(calc(66vw - 50%)) translateY(95px) rotate(40deg); opacity: 0.7; } /* 거의 수직에 가까움 */
-  95%  { transform: translateX(calc(66vw - 50%)) translateY(180px) rotate(50deg); opacity: 0; }  /* 완전 침몰 */
+  90%  { transform: translateX(calc(66vw - 50%)) translateY(95px) rotate(40deg); opacity: 0.7; }
+  95%  { transform: translateX(calc(66vw - 50%)) translateY(180px) rotate(50deg); opacity: 0; }
   100% { transform: translateX(-130%) translateY(0) rotate(0); opacity: 0; }
 }
 
-/* 충돌 직후 빙산 흔들림 - 배가 도착하는 55% 시점에 맞춤 */
 @keyframes iceberg-shake {
   0%, 55%, 61%, 100% { transform: translateX(0); }
   56% { transform: translateX(-3px) translateY(-2px); }
@@ -112,7 +190,6 @@ html, body {
   60% { transform: translateX(-1px); }
 }
 
-/* 충돌 폭발 - 배가 빙산에 도착하는 55% 시점에 짧고 강하게 한 번 */
 @keyframes explosion {
   0%, 55%, 60%, 100% { opacity: 0; transform: scale(0) rotate(0deg); filter: brightness(1); }
   56%                { opacity: 1; transform: scale(0.4) rotate(0deg); filter: brightness(1.8); }
@@ -121,7 +198,6 @@ html, body {
   59%                { opacity: 0; transform: scale(1.4) rotate(0deg); filter: brightness(1); }
 }
 
-/* 폭발 잔광 (충돌 후 빛 번짐) - 짧게 페이드 */
 @keyframes explosion-aftershock {
   0%, 56%, 62%, 100% { opacity: 0; transform: scale(0.4); }
   57%                { opacity: 0.7; transform: scale(0.9); }
@@ -129,7 +205,6 @@ html, body {
   61%                { opacity: 0; transform: scale(1.7); }
 }
 
-/* 충돌 직후 배 가운데 균열이 점차 드러남 */
 @keyframes ship-crack {
   0%, 60% { opacity: 0; }
   64%     { opacity: 0.5; }
@@ -138,7 +213,6 @@ html, body {
   100%    { opacity: 0; }
 }
 
-/* tailwind 빌드 의존성 없이 바로 적용되도록 utility class 직접 정의 */
 .animate-explosion {
   animation: explosion 22s ease-in-out infinite;
 }

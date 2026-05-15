@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR, Press_Start_2P } from "next/font/google";
-import NavBar from "@/components/NavBar";
 import "./globals.css";
 
 const noto = Noto_Sans_KR({
@@ -18,17 +17,14 @@ const pressStart = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
-  title: "RagWatson Agora",
-  description: "대화형 AI 에이전트 플랫폼",
+  title: "jangminseok.dev — Developer Portfolio",
+  description: "장민석 개발자 포트폴리오. 학습 프로젝트부터 개인 프로젝트까지.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={`${noto.variable} ${pressStart.variable}`}>
-      <body className="min-h-screen font-sans bg-sky">
-        <NavBar />
-        {children}
-      </body>
+      <body className="min-h-screen font-sans">{children}</body>
     </html>
   );
 }

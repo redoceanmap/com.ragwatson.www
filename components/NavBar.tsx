@@ -24,15 +24,20 @@ export default function NavBar() {
   return (
     <header className="sticky top-0 z-30 bg-hull border-b-4 border-accent">
       <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 text-ink font-bold pixel-text text-xs sm:text-sm">
-          <span className="relative w-9 h-9 bg-accent border-4 border-black grid place-items-center text-hull text-sm shadow-pixel-sm animate-flicker">
-            ☼
-          </span>
-          <span className="text-shadow-pixel">TITANIC</span>
-        </Link>
+        <div className="flex items-center gap-3 text-xs pixel-text">
+          <Link href="/titanic" className="flex items-center gap-3 text-ink font-bold pixel-text text-xs sm:text-sm">
+            <span className="relative w-9 h-9 bg-accent border-4 border-black grid place-items-center text-hull text-sm shadow-pixel-sm animate-flicker">
+              ☼
+            </span>
+            <span className="text-shadow-pixel">TITANIC</span>
+          </Link>
+          <BrassPlate href="/" badge="HOME" icon="⌂">
+            홈
+          </BrassPlate>
+        </div>
 
         <div className="flex items-center gap-3 text-xs pixel-text">
-          <BrassPlate href="/titanic" badge="DECK" icon="⚓">
+          <BrassPlate href="/titanic/predict" badge="DECK" icon="⚓">
             타이타닉
           </BrassPlate>
           {authed ? (
