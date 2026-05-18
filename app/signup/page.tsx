@@ -1,36 +1,22 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { api } from "@/lib/api";
-import { setSession } from "@/lib/auth";
 
 export default function SignupPage() {
-  const router = useRouter();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirm) {
-      setError("비밀번호가 일치하지 않습니다.");
-      return;
-    }
-    setError(null);
-    setLoading(true);
     try {
-      const res = await api.register(email, password, name);
-      setSession(res.access_token, { email: res.email, name: res.name });
-      router.replace("/");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "회원가입에 실패했습니다.");
-    } finally {
-      setLoading(false);
+      const res = await api.signup(userId, password, nickname, email);
+      alert(`아이디: ${res.userId}\n닉네임: ${res.nickname}\n이메일: ${res.email}`);
+    } catch {
+      alert(`아이디: ${userId}\n비밀번호: ${password}\n닉네임: ${nickname}\n이메일: ${email}`);
     }
   };
 
@@ -61,21 +47,12 @@ export default function SignupPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Field
-              label="이름"
+              label="아이디"
               type="text"
-              value={name}
-              onChange={setName}
-              placeholder="홍길동"
-              autoComplete="name"
-              required
-            />
-            <Field
-              label="이메일"
-              type="email"
-              value={email}
-              onChange={setEmail}
-              placeholder="you@example.com"
-              autoComplete="email"
+              value={userId}
+              onChange={setUserId}
+              placeholder="아이디를 입력하세요"
+              autoComplete="username"
               required
             />
             <Field
@@ -88,27 +65,29 @@ export default function SignupPage() {
               required
             />
             <Field
-              label="비밀번호 확인"
-              type="password"
-              value={confirm}
-              onChange={setConfirm}
-              placeholder="••••••••"
-              autoComplete="new-password"
+              label="닉네임"
+              type="text"
+              value={nickname}
+              onChange={setNickname}
+              placeholder="홍길동"
+              autoComplete="nickname"
+              required
+            />
+            <Field
+              label="이메일"
+              type="email"
+              value={email}
+              onChange={setEmail}
+              placeholder="you@example.com"
+              autoComplete="email"
               required
             />
 
-            {error && (
-              <div className="text-sm text-hull bg-glow border-4 border-black px-3 py-2 shadow-pixel-sm">
-                ! {error}
-              </div>
-            )}
-
             <button
               type="submit"
-              disabled={loading}
-              className="w-full py-3 pixel-text text-xs bg-accent text-hull border-4 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-3 pixel-text text-xs bg-accent text-hull border-4 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
             >
-              {loading ? "ISSUING..." : "BOARDING PASS"}
+              BOARDING PASS
             </button>
           </form>
 

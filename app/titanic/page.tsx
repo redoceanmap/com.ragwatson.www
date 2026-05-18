@@ -30,11 +30,21 @@ const STARS = [
   { top: "24%", left: "70%", size: 2, delay: "0.2s" },
 ];
 
+const DAYS_KR = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
 export default function HomePage() {
   const [input, setInput] = useState("");
   const [reply, setReply] = useState("");
   const [loading, setLoading] = useState(false);
   const [weather, setWeather] = useState<Weather | null>(null);
+  const [now, setNow] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setNow(new Date());
+    const timer = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -84,35 +94,6 @@ export default function HomePage() {
 
       {/* 메인 컨텐츠 */}
       <div className="relative z-10 flex flex-col items-center pt-20 pb-48 px-6">
-        {/* 픽셀 날씨 위젯 — 우측 상단 */}
-        {weather && !weather.error && weather.temp !== undefined && (
-          <div className="absolute top-6 right-6 z-20 bg-hull border-4 border-accent shadow-pixel-lg">
-            <div className="bg-accent px-3 py-1 border-b-4 border-black">
-              <span className="pixel-text text-[10px] text-hull">
-                ▼ WEATHER STATION
-              </span>
-            </div>
-            <div className="px-3 py-2 flex items-center gap-2">
-              {weather.icon && (
-                <img
-                  src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
-                  alt={weather.description ?? ""}
-                  className="h-8 w-8"
-                  style={{ imageRendering: "pixelated" }}
-                />
-              )}
-              <div className="flex flex-col">
-                <span className="pixel-text text-[10px] text-accent">
-                  {weather.city}
-                </span>
-                <span className="pixel-text text-xs text-accent">
-                  {Math.round(weather.temp)}°C
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
-
         <h1 className="pixel-text text-5xl sm:text-7xl text-accent text-center leading-relaxed text-shadow-glow animate-flicker">
           TITANIC
         </h1>
@@ -125,8 +106,64 @@ export default function HomePage() {
           대화형 AI 에이전트 플랫폼
         </p>
 
+        {/* 픽셀 날씨 위젯 — 검색 박스 위 */}
+        {weather && !weather.error && weather.temp !== undefined && (
+          <div className="mt-10 w-full max-w-xl bg-hull border-4 border-accent shadow-pixel-lg">
+            <div className="bg-accent px-3 py-1 border-b-4 border-black flex items-center justify-between">
+              <span className="pixel-text text-[10px] text-hull">
+                ▼ WEATHER STATION
+              </span>
+              <span className="pixel-text text-[10px] text-hull">
+                {weather.city}
+              </span>
+            </div>
+            <div className="px-4 py-3 flex items-center justify-between gap-3">
+              <div className="flex flex-col">
+                <span className="pixel-text text-[8px] text-accent/70">
+                  {now
+                    ? `${now.getFullYear()}.${pad2(now.getMonth() + 1)}.${pad2(now.getDate())} ${DAYS_KR[now.getDay()]}`
+                    : ""}
+                </span>
+                <span className="pixel-text text-base sm:text-lg text-accent leading-tight mt-1">
+                  {now ? `${pad2(now.getHours())}:${pad2(now.getMinutes())}` : "--:--"}
+                </span>
+              </div>
+
+              <div className="w-1 h-10 bg-accent/40" />
+
+              <div className="flex flex-col">
+                <span className="pixel-text text-sm sm:text-base text-accent leading-none">
+                  {Math.round(weather.temp)}°C
+                </span>
+                <span className="pixel-text text-[8px] text-accent/70 mt-1">
+                  FEELS {Math.round(weather.feels_like ?? weather.temp)}°
+                </span>
+                <span className="pixel-text text-[8px] text-accent/70">
+                  HUM {weather.humidity}%
+                </span>
+              </div>
+
+              <div className="w-1 h-10 bg-accent/40" />
+
+              <div className="flex items-center gap-2">
+                {weather.icon && (
+                  <img
+                    src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+                    alt={weather.description ?? ""}
+                    className="h-10 w-10 sm:h-12 sm:w-12"
+                    style={{ imageRendering: "pixelated" }}
+                  />
+                )}
+                <span className="pixel-text text-[10px] text-accent max-w-[80px] sm:max-w-[120px]">
+                  {weather.description}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* 검색 박스 — 무선 통신실 콘솔 느낌 */}
-        <div className="mt-10 w-full max-w-xl">
+        <div className="mt-4 w-full max-w-xl">
           <div className="bg-hull border-4 border-accent shadow-pixel-lg">
             <div className="bg-accent px-3 py-1 border-b-4 border-black">
               <span className="pixel-text text-[10px] text-hull">

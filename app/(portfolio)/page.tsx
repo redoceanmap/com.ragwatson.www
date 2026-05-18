@@ -39,11 +39,21 @@ const skills = [
   "PostgreSQL",
 ];
 
+const DAYS_KR = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
 export default function HomePage() {
   const [input, setInput] = useState("");
   const [reply, setReply] = useState("");
   const [loading, setLoading] = useState(false);
   const [weather, setWeather] = useState<Weather | null>(null);
+  const [now, setNow] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setNow(new Date());
+    const timer = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -78,18 +88,53 @@ export default function HomePage() {
       {/* Hero */}
       <section className="pt-6 sm:pt-12">
         {weather && !weather.error && weather.temp !== undefined && (
-          <div className="mb-2 inline-flex items-center gap-2 rounded-full glass-surface-soft glass-highlight relative px-4 py-1.5 text-xs text-white/70">
-            {weather.icon && (
-              <img
-                src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
-                alt={weather.description ?? ""}
-                className="h-5 w-5"
-              />
-            )}
-            <span className="text-white">{weather.city}</span>
-            <span>{Math.round(weather.temp)}°C</span>
-            <span className="text-white/45">·</span>
-            <span className="text-white/55">{weather.description}</span>
+          <div className="mb-6 glass-surface glass-highlight relative rounded-2xl px-5 py-4 sm:px-8 sm:py-5">
+            <div className="flex items-center justify-between gap-4 sm:gap-8">
+              <div className="flex flex-col">
+                <div className="text-[10px] sm:text-xs text-white/65 tracking-wider">
+                  {now
+                    ? `${now.getFullYear()}.${pad2(now.getMonth() + 1)}.${pad2(now.getDate())} | ${DAYS_KR[now.getDay()]}`
+                    : ""}
+                </div>
+                <div className="font-display text-2xl sm:text-4xl font-bold text-white tabular-nums leading-tight">
+                  {now ? `${pad2(now.getHours())}:${pad2(now.getMinutes())}` : "--:--"}
+                </div>
+              </div>
+
+              <div className="h-10 sm:h-12 w-px bg-white/15" />
+
+              <div className="flex flex-col items-start min-w-[60px]">
+                <div className="font-display text-2xl sm:text-3xl font-semibold text-white leading-none">
+                  {Math.round(weather.temp)}°C
+                </div>
+                <div className="mt-1 text-[10px] sm:text-xs text-white/55">
+                  체감온도 <span className="text-white/80">{Math.round(weather.feels_like ?? weather.temp)}°C</span>
+                </div>
+                <div className="text-[10px] sm:text-xs text-white/55">
+                  습도 <span className="text-white/80">{weather.humidity}%</span>
+                </div>
+              </div>
+
+              <div className="h-10 sm:h-12 w-px bg-white/15" />
+
+              <div className="flex items-center gap-2 sm:gap-3 flex-1 justify-end">
+                {weather.icon && (
+                  <img
+                    src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+                    alt={weather.description ?? ""}
+                    className="h-12 w-12 sm:h-16 sm:w-16 drop-shadow-[0_2px_8px_rgba(255,255,255,0.15)]"
+                  />
+                )}
+                <div className="flex flex-col items-end">
+                  <div className="text-xs sm:text-sm text-white font-medium">
+                    {weather.city}
+                  </div>
+                  <div className="text-[10px] sm:text-xs text-white/65">
+                    {weather.description}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
         <div className="mt-2 glass-surface glass-highlight relative rounded-3xl px-5 py-4 sm:px-6 sm:py-5">

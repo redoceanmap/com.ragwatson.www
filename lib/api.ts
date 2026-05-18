@@ -61,8 +61,15 @@ export const api = {
       { method: "POST", body: JSON.stringify({ message, session_id: sessionId }) },
     ),
 
+  signup: (userId: string, password: string, nickname: string, email: string) =>
+    request<{ message: string; userId: string; nickname: string; email: string }>(
+      "/signup",
+      { method: "POST", body: JSON.stringify({ userId, password, nickname, email }) },
+      false,
+    ),
+
   weather: (lat: number, lon: number) =>
-    request<{
+    fetch(`/api/weather?lat=${lat}&lon=${lon}`).then((r) => r.json()) as Promise<{
       city?: string;
       temp?: number;
       feels_like?: number;
@@ -70,7 +77,7 @@ export const api = {
       icon?: string;
       humidity?: number;
       error?: string;
-    }>(`/weather?lat=${lat}&lon=${lon}`, { method: "GET" }, false),
+    }>,
 
   titanic: {
     count: () => request<{ count: number }>("/titanic/count"),

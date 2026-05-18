@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { api } from "@/lib/api";
 
 type Mode = "login" | "signup";
 
@@ -112,33 +113,71 @@ export function AuthModal({ open, initialMode, onClose }: Props) {
 
         <form
           className="mt-6 space-y-3"
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
+            if (isLogin) return;
+            const fd = new FormData(e.currentTarget);
+            const userId = String(fd.get("userId") ?? "");
+            const password = String(fd.get("password") ?? "");
+            const nickname = String(fd.get("nickname") ?? "");
+            const email = String(fd.get("email") ?? "");
+            try {
+              const res = await api.signup(userId, password, nickname, email);
+              alert(`아이디: ${res.userId}\n닉네임: ${res.nickname}\n이메일: ${res.email}`);
+            } catch {
+              alert(`아이디: ${userId}\n비밀번호: ${password}\n닉네임: ${nickname}\n이메일: ${email}`);
+            }
           }}
         >
-          {!isLogin && (
-            <Field
-              label="이름"
-              type="text"
-              name="name"
-              placeholder="홍길동"
-              autoComplete="name"
-            />
+          {!isLogin ? (
+            <>
+              <Field
+                label="아이디"
+                type="text"
+                name="userId"
+                placeholder="아이디를 입력하세요"
+                autoComplete="username"
+              />
+              <Field
+                label="비밀번호"
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                autoComplete="new-password"
+              />
+              <Field
+                label="닉네임"
+                type="text"
+                name="nickname"
+                placeholder="홍길동"
+                autoComplete="nickname"
+              />
+              <Field
+                label="이메일"
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                autoComplete="email"
+              />
+            </>
+          ) : (
+            <>
+              <Field
+                label="이메일"
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                autoComplete="email"
+              />
+              <Field
+                label="비밀번호"
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                autoComplete="current-password"
+              />
+            </>
           )}
-          <Field
-            label="이메일"
-            type="email"
-            name="email"
-            placeholder="you@example.com"
-            autoComplete="email"
-          />
-          <Field
-            label="비밀번호"
-            type="password"
-            name="password"
-            placeholder="••••••••"
-            autoComplete={isLogin ? "current-password" : "new-password"}
-          />
 
           {isLogin && (
             <div className="flex items-center justify-between pt-1">
