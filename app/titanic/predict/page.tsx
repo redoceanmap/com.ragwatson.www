@@ -17,7 +17,7 @@ export default function TitanicPage() {
     const isCsv =
       f.type === "text/csv" || f.name.toLowerCase().endsWith(".csv");
     if (!isCsv) {
-      setError("CSV 파일만 업로드할 수 있습니다.");
+      setError("CSV 파일만 올릴 수 있어요");
       return;
     }
     setFile(f);
@@ -85,7 +85,7 @@ export default function TitanicPage() {
               <div className="pixel-text text-2xl mb-4 text-accent">[ + ]</div>
               <p className="pixel-text text-xs text-accent">DROP CSV HERE</p>
               <p className="text-muted text-sm mt-3">
-                또는 클릭해서 파일 선택
+                클릭해서 파일을 골라도 돼요
               </p>
             </>
           ) : (

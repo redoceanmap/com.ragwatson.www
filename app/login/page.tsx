@@ -22,7 +22,7 @@ export default function LoginPage() {
       setSession(res.access_token, { email: res.email, name: res.name });
       router.replace("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "로그인에 실패했습니다.");
+      setError(err instanceof Error ? err.message : "로그인에 실패했어요");
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ export default function LoginPage() {
               <div className="w-8 h-8 rounded-full border-2 border-hull bg-hull/30" />
             </div>
             <h1 className="pixel-text text-sm sm:text-base text-accent text-shadow-pixel">SIGN IN</h1>
-            <p className="text-sm text-muted mt-3">계정으로 로그인하세요</p>
+            <p className="text-sm text-muted mt-3">다시 만나서 반가워요</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

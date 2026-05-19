@@ -67,7 +67,7 @@ export default function HomePage() {
       const res = await api.chat(msg, "titanic");
       setReply(res.reply ?? res.error ?? "");
     } catch {
-      setReply("전송 실패. 다시 시도하세요.");
+      setReply("전송에 실패했어요. 다시 시도해 주세요");
     } finally {
       setLoading(false);
       setInput("");
@@ -182,7 +182,7 @@ export default function HomePage() {
                     handleSubmit();
                   }
                 }}
-                placeholder={loading ? "전송 중..." : "검색어를 입력하세요..."}
+                placeholder={loading ? "전송 중..." : "무엇이 궁금하신가요?"}
                 disabled={loading}
                 className="flex-1 bg-transparent outline-none text-ink placeholder:text-muted text-sm font-sans disabled:opacity-50"
               />

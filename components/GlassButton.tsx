@@ -22,11 +22,11 @@ type Props = ButtonProps | LinkProps;
 
 function classes(variant: "primary" | "ghost", extra = "") {
   const base =
-    "glass-highlight relative inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium tracking-tight transition-all duration-300 active:scale-[0.98]";
+    "relative inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium tracking-tight transition-all duration-300 active:scale-[0.98]";
   const tone =
     variant === "primary"
-      ? "glass-surface text-white hover:bg-white/[0.14]"
-      : "glass-surface-soft text-white/80 hover:text-white hover:bg-white/[0.1]";
+      ? "bg-[#BE123C] text-white hover:bg-[#9F1239] shadow-[0_4px_16px_-4px_rgba(190,18,60,0.35)]"
+      : "bg-white text-[#191F28] border border-[#E5E8EB] hover:bg-[#F8F9FA]";
   return [base, tone, extra].join(" ");
 }
 

@@ -4,11 +4,25 @@ import Link from "next/link";
 import { useState } from "react";
 import { api } from "@/lib/api";
 
+type EmailStatus = "idle" | "checking" | "available" | "duplicate";
+
 export default function SignupPage() {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
+  const [emailStatus, setEmailStatus] = useState<EmailStatus>("idle");
+
+  const handleEmailBlur = async () => {
+    if (!email) return;
+    setEmailStatus("checking");
+    try {
+      const res = await api.checkEmail(email);
+      setEmailStatus(res.available ? "available" : "duplicate");
+    } catch {
+      setEmailStatus("idle");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +56,7 @@ export default function SignupPage() {
               <span className="pixel-text text-lg text-hull">+</span>
             </div>
             <h1 className="pixel-text text-sm sm:text-base text-accent text-shadow-pixel">NEW PASSENGER</h1>
-            <p className="text-sm text-muted mt-3">새 계정을 만드세요</p>
+            <p className="text-sm text-muted mt-3">계정을 만들어 볼까요?</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -77,10 +91,20 @@ export default function SignupPage() {
               label="이메일"
               type="email"
               value={email}
-              onChange={setEmail}
+              onChange={(v) => { setEmail(v); setEmailStatus("idle"); }}
+              onBlur={handleEmailBlur}
               placeholder="you@example.com"
               autoComplete="email"
               required
+              hint={
+                emailStatus === "available" ? "사용할 수 있는 이메일이에요" :
+                emailStatus === "duplicate" ? "이미 사용 중인 이메일이에요" :
+                emailStatus === "checking" ? "확인하고 있어요" : undefined
+              }
+              hintColor={
+                emailStatus === "available" ? "text-green-400" :
+                emailStatus === "duplicate" ? "text-red-400" : "text-muted"
+              }
             />
 
             <button
@@ -108,12 +132,15 @@ interface FieldProps {
   type: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
   placeholder?: string;
   autoComplete?: string;
   required?: boolean;
+  hint?: string;
+  hintColor?: string;
 }
 
-function Field({ label, type, value, onChange, placeholder, autoComplete, required }: FieldProps) {
+function Field({ label, type, value, onChange, onBlur, placeholder, autoComplete, required, hint, hintColor }: FieldProps) {
   return (
     <label className="block">
       <span className="pixel-text text-[10px] text-accent mb-2 block">{label}</span>
@@ -121,11 +148,13 @@ function Field({ label, type, value, onChange, placeholder, autoComplete, requir
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
         placeholder={placeholder}
         autoComplete={autoComplete}
         required={required}
         className="w-full px-3 py-3 border-4 border-accent bg-night-deep text-ink placeholder:text-muted focus:bg-hull focus:border-glow outline-none transition"
       />
+      {hint && <span className={`text-xs mt-1 block ${hintColor}`}>{hint}</span>}
     </label>
   );
 }

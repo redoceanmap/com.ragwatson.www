@@ -37,5 +37,6 @@ export function clearSession() {
 export function displayName(profile: Profile | null): string {
   if (!profile) return "방문자";
   if (profile.name) return profile.name;
-  return profile.email.split("@")[0] ?? "방문자";
+  if (profile.email) return profile.email.split("@")[0] ?? "방문자";
+  return "방문자";
 }

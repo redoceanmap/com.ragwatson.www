@@ -25,7 +25,7 @@ async function request<T>(
     const message =
       (data && typeof data === "object" && "detail" in data
         ? String((data as { detail: unknown }).detail)
-        : null) ?? `요청 실패 (${res.status})`;
+        : null) ?? `요청에 실패했어요 (${res.status})`;
     throw new Error(message);
   }
 
@@ -43,7 +43,7 @@ function safeJson(text: string): unknown {
 export const api = {
   login: (email: string, password: string) =>
     request<LoginResponse>(
-      "/auth/login",
+      "/login",
       { method: "POST", body: JSON.stringify({ email, password }) },
       false,
     ),
@@ -65,6 +65,13 @@ export const api = {
     request<{ message: string; userId: string; nickname: string; email: string }>(
       "/signup",
       { method: "POST", body: JSON.stringify({ userId, password, nickname, email }) },
+      false,
+    ),
+
+  checkEmail: (email: string) =>
+    request<{ available: boolean }>(
+      `/check-email?email=${encodeURIComponent(email)}`,
+      {},
       false,
     ),
 
