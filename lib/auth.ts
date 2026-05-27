@@ -33,10 +33,3 @@ export function clearSession() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(PROFILE_KEY);
 }
-
-export function displayName(profile: Profile | null): string {
-  if (!profile) return "방문자";
-  if (profile.name) return profile.name;
-  if (profile.email) return profile.email.split("@")[0] ?? "방문자";
-  return "방문자";
-}

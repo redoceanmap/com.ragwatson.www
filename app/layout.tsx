@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR, Press_Start_2P } from "next/font/google";
 import "./globals.css";
+import AuthHydrator from "@/components/AuthHydrator";
 
 const noto = Noto_Sans_KR({
   subsets: ["latin"],
@@ -17,14 +18,24 @@ const pressStart = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
-  title: "jangminseok.dev — Developer Portfolio",
-  description: "장민석 개발자 포트폴리오. 학습 프로젝트부터 개인 프로젝트까지.",
+  title: "redoceanmap — 서울 상권 분석",
+  description: "예산이랑 업종만 알려주세요. 괜찮은 동네 골라드릴게요.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="ko" className={`${noto.variable} ${pressStart.variable}`}>
-      <body className="min-h-screen font-sans">{children}</body>
+    <html
+      lang="ko"
+      className={`${noto.variable} ${pressStart.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col font-sans">
+        <AuthHydrator />
+        {children}
+      </body>
     </html>
   );
 }

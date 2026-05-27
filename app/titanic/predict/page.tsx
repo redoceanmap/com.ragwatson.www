@@ -5,36 +5,38 @@ import PixelTitanic from "@/components/PixelTitanic";
 import PixelIceberg from "@/components/PixelIceberg";
 
 export default function TitanicPage() {
-  const [file, setFile] = useState<File | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [dragOver, setDragOver] = useState(false);
+  const [state, setState] = useState<{ file: File | null; error: string | null; dragOver: boolean }>({
+    file: null,
+    error: null,
+    dragOver: false,
+  });
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFiles = (files: FileList | null) => {
-    setError(null);
+    setState(prev => ({ ...prev, error: null }));
     if (!files || files.length === 0) return;
     const f = files[0];
     const isCsv =
       f.type === "text/csv" || f.name.toLowerCase().endsWith(".csv");
     if (!isCsv) {
-      setError("CSV 파일만 올릴 수 있어요");
+      setState(prev => ({ ...prev, error: "CSV 파일만 올릴 수 있어요" }));
       return;
     }
-    setFile(f);
+    setState(prev => ({ ...prev, file: f }));
   };
 
   const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setDragOver(false);
+    setState(prev => ({ ...prev, dragOver: false }));
     handleFiles(e.dataTransfer.files);
   };
 
   const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setDragOver(true);
+    setState(prev => ({ ...prev, dragOver: true }));
   };
 
-  const onDragLeave = () => setDragOver(false);
+  const onDragLeave = () => setState(prev => ({ ...prev, dragOver: false }));
 
   const formatSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`;
@@ -43,7 +45,7 @@ export default function TitanicPage() {
   };
 
   return (
-    <main className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center px-6 pt-12 pb-48 overflow-hidden starfield">
+    <main className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center px-4 sm:px-6 pt-10 sm:pt-12 pb-32 sm:pb-48 overflow-hidden starfield">
       {/* 별 */}
       <span className="absolute top-[8%] left-[10%] w-1 h-1 bg-star animate-twinkle" style={{ boxShadow: "0 0 6px #FFE873" }} />
       <span className="absolute top-[14%] right-[12%] w-1 h-1 bg-star animate-twinkle" style={{ animationDelay: "0.8s", boxShadow: "0 0 6px #FFE873" }} />
@@ -62,7 +64,7 @@ export default function TitanicPage() {
         onDragLeave={onDragLeave}
         onClick={() => inputRef.current?.click()}
         className={`relative w-full max-w-2xl mt-10 border-4 cursor-pointer transition-all shadow-pixel-lg ${
-          dragOver ? "border-glow bg-night-mid" : "border-accent bg-hull hover:bg-night-mid"
+          state.dragOver ? "border-glow bg-night-mid" : "border-accent bg-hull hover:bg-night-mid"
         }`}
       >
         {/* 콘솔 헤더 */}
@@ -79,8 +81,8 @@ export default function TitanicPage() {
           onChange={(e) => handleFiles(e.target.files)}
         />
 
-        <div className="px-8 py-12 text-center">
-          {!file ? (
+        <div className="px-5 sm:px-8 py-10 sm:py-12 text-center">
+          {!state.file ? (
             <>
               <div className="pixel-text text-2xl mb-4 text-accent">[ + ]</div>
               <p className="pixel-text text-xs text-accent">DROP CSV HERE</p>
@@ -91,12 +93,12 @@ export default function TitanicPage() {
           ) : (
             <>
               <div className="pixel-text text-2xl mb-4 text-glow">[ OK ]</div>
-              <p className="pixel-text text-xs text-accent break-all">{file.name}</p>
-              <p className="text-muted text-sm mt-2">{formatSize(file.size)}</p>
+              <p className="pixel-text text-xs text-accent break-all">{state.file.name}</p>
+              <p className="text-muted text-sm mt-2">{formatSize(state.file.size)}</p>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setFile(null);
+                  setState(prev => ({ ...prev, file: null }));
                   if (inputRef.current) inputRef.current.value = "";
                 }}
                 className="mt-4 px-4 py-2 pixel-text text-[10px] bg-glow text-hull border-4 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
@@ -108,9 +110,9 @@ export default function TitanicPage() {
         </div>
       </div>
 
-      {error && (
+      {state.error && (
         <p className="mt-4 pixel-text text-[10px] text-hull bg-glow border-4 border-black px-4 py-2 shadow-pixel-sm">
-          ! {error}
+          ! {state.error}
         </p>
       )}
 

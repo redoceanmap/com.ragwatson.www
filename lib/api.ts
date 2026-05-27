@@ -48,19 +48,6 @@ export const api = {
       false,
     ),
 
-  register: (email: string, password: string, name: string) =>
-    request<LoginResponse>(
-      "/auth/register",
-      { method: "POST", body: JSON.stringify({ email, password, name }) },
-      false,
-    ),
-
-  chat: (message: string, sessionId: string) =>
-    request<{ reply?: string; error?: string }>(
-      "/chat",
-      { method: "POST", body: JSON.stringify({ message, session_id: sessionId }) },
-    ),
-
   signup: (userId: string, password: string, nickname: string, email: string) =>
     request<{ message: string; userId: string; nickname: string; email: string }>(
       "/signup",
@@ -68,11 +55,10 @@ export const api = {
       false,
     ),
 
-  checkEmail: (email: string) =>
-    request<{ available: boolean }>(
-      `/check-email?email=${encodeURIComponent(email)}`,
-      {},
-      false,
+  chat: (message: string, sessionId: string) =>
+    request<{ reply?: string; error?: string }>(
+      "/chat",
+      { method: "POST", body: JSON.stringify({ message, session_id: sessionId }) },
     ),
 
   weather: (lat: number, lon: number) =>
@@ -85,19 +71,4 @@ export const api = {
       humidity?: number;
       error?: string;
     }>,
-
-  titanic: {
-    count: () => request<{ count: number }>("/titanic/count"),
-    survived: () => request<{ survived: number }>("/titanic/count/survived"),
-    dead: () => request<{ dead: number }>("/titanic/count/dead"),
-    model: () => request<{ model: string; accuracy: number }>("/titanic/model"),
-    tree: () => request<{ tree: string }>("/titanic/tree"),
-  },
-
-  dbCheck: () =>
-    request<{ status: string; neon_time?: string; message?: string }>(
-      "/db-check",
-    ),
 };
-
-export { BASE_URL };

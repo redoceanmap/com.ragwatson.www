@@ -1,67 +1,59 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { clearSession, displayName, getProfile, getToken, type Profile } from "@/lib/auth";
+import { useUIStore } from "@/lib/uiStore";
+import { clearSession } from "@/lib/auth";
+import PixelAuthModal from "@/components/PixelAuthModal";
 
 export default function NavBar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [authed, setAuthed] = useState(false);
-
-  useEffect(() => {
-    setProfile(getProfile());
-    setAuthed(!!getToken());
-  }, [pathname]);
+  const user = useUIStore((s) => s.user);
+  const setUser = useUIStore((s) => s.setUser);
+  const openAuth = useUIStore((s) => s.openAuth);
 
   const handleLogout = () => {
     clearSession();
-    router.replace("/");
+    setUser(null);
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-hull border-b-4 border-accent">
-      <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-3 text-xs pixel-text">
-          <Link href="/titanic" className="flex items-center gap-3 text-ink font-bold pixel-text text-xs sm:text-sm">
-            <span className="relative w-9 h-9 bg-accent border-4 border-black grid place-items-center text-hull text-sm shadow-pixel-sm animate-flicker">
-              ☼
-            </span>
-            <span className="text-shadow-pixel">TITANIC</span>
-          </Link>
-          <BrassPlate href="/" badge="HOME" icon="⌂">
-            홈
-          </BrassPlate>
-        </div>
-
-        <div className="flex items-center gap-3 text-xs pixel-text">
-          <BrassPlate href="/titanic/predict" badge="DECK" icon="⚓">
-            타이타닉
-          </BrassPlate>
-          {authed ? (
-            <>
-              <span className="hidden sm:inline text-accent bg-hull px-3 py-2 border-4 border-accent shadow-pixel-sm">
-                {displayName(profile)}
+    <>
+      <header className="sticky top-0 z-30 bg-hull border-b-4 border-accent">
+        <div className="mx-auto max-w-6xl px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+          <div className="flex items-center gap-1.5 sm:gap-3 text-xs pixel-text">
+            <Link href="/titanic" className="flex items-center gap-2 text-ink font-bold pixel-text text-xs sm:text-sm">
+              <span className="relative w-8 h-8 sm:w-9 sm:h-9 bg-accent border-2 sm:border-4 border-black grid place-items-center text-hull text-sm animate-flicker">
+                ☼
               </span>
-              <BrassPlate onClick={handleLogout} badge="EXIT" icon="✕">
-                로그아웃
-              </BrassPlate>
-            </>
-          ) : (
-            <>
-              <BrassPlate href="/login" badge="2ND" icon="▶">
+              <span className="hidden sm:inline text-shadow-pixel">TITANIC</span>
+            </Link>
+            <BrassPlate href="/" badge="HOME" icon="⌂">
+              홈
+            </BrassPlate>
+          </div>
+
+          <div className="flex items-center gap-1.5 sm:gap-3 text-xs pixel-text">
+            <BrassPlate href="/titanic/predict" badge="DECK" icon="⚓">
+              타이타닉
+            </BrassPlate>
+            {user ? (
+              <>
+                <span className="hidden sm:inline text-accent bg-hull px-3 py-2 border-4 border-accent shadow-pixel-sm">
+                  {user.name}
+                </span>
+                <BrassPlate onClick={handleLogout} badge="EXIT" icon="✕">
+                  로그아웃
+                </BrassPlate>
+              </>
+            ) : (
+              <BrassPlate onClick={() => openAuth("login")} badge="1ST" icon="★" variant="polished">
                 로그인
               </BrassPlate>
-              <BrassPlate href="/signup" badge="1ST" icon="★" variant="polished">
-                회원가입
-              </BrassPlate>
-            </>
-          )}
+            )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+      <PixelAuthModal />
+    </>
   );
 }
 
@@ -87,15 +79,15 @@ function BrassPlate({ href, onClick, badge, icon, variant = "patina", children }
   const dividerColor = isPolished ? "bg-hull/40" : "bg-accent/40";
   const badgeColor = isPolished ? "text-hull/70" : "text-accent/60";
 
-  const className = `relative pl-2 pr-3 py-2 border-4 shadow-pixel-sm transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none inline-flex items-center gap-2 ${variantStyle}`;
+  const className = `relative pl-1.5 sm:pl-2 pr-2 sm:pr-3 py-1 sm:py-2 border-2 sm:border-4 whitespace-nowrap shadow-none sm:shadow-pixel-sm transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none inline-flex items-center gap-1.5 sm:gap-2 ${variantStyle}`;
 
   const inner = (
     <>
       {/* 모서리 4개 리벳 (놋쇠 명판 못) */}
-      <span className={`absolute top-[3px] left-[3px] w-1 h-1 ${rivetColor}`} />
-      <span className={`absolute top-[3px] right-[3px] w-1 h-1 ${rivetColor}`} />
-      <span className={`absolute bottom-[3px] left-[3px] w-1 h-1 ${rivetColor}`} />
-      <span className={`absolute bottom-[3px] right-[3px] w-1 h-1 ${rivetColor}`} />
+      <span className={`hidden sm:block absolute top-[3px] left-[3px] w-1 h-1 ${rivetColor}`} />
+      <span className={`hidden sm:block absolute top-[3px] right-[3px] w-1 h-1 ${rivetColor}`} />
+      <span className={`hidden sm:block absolute bottom-[3px] left-[3px] w-1 h-1 ${rivetColor}`} />
+      <span className={`hidden sm:block absolute bottom-[3px] right-[3px] w-1 h-1 ${rivetColor}`} />
 
       {/* 클래스 배지 */}
       {badge && (

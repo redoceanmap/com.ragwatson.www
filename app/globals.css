@@ -1,10 +1,8 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+@import "tailwindcss";
+@config "../tailwind.config.ts";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* 한글 픽셀 폰트 — Galmuri11/14 (한글 + 라틴 모두 픽셀 스타일) */
+/* 한글 픽셀 폰트 — Galmuri11/14 */
 @font-face {
   font-family: "Galmuri11";
   src: url("https://cdn.jsdelivr.net/gh/quiple/galmuri/dist/Galmuri11.woff2") format("woff2");
@@ -22,29 +20,32 @@
 }
 
 :root {
-  --font-sans: "Pretendard Variable", Pretendard, -apple-system,
-    BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI",
-    Roboto, sans-serif;
-  --font-display: "Pretendard Variable", Pretendard, -apple-system,
-    BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  --background: #FAF7F2;
+  --surface: #FFFFFF;
+  --foreground: #1A1A1A;
+  --foreground-muted: #6B6B6B;
+  --border: #E8E2D9;
+  --brand: #722F37;
+  --brand-deep: #4A1D24;
 }
 
-html,
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-border: var(--border);
+  --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
 body {
-  background-color: #F5F2F0;
-  color: #191F28;
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.01em;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  min-height: 100dvh;
-  overflow-x: hidden;
 }
 
 ::selection {
@@ -52,43 +53,7 @@ body {
   color: #fff;
 }
 
-/* === Toss-style Light Glass (portfolio) === */
-@layer components {
-  .theme-glass {
-    color: #191F28;
-  }
-
-  .glass-surface {
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(22px) saturate(180%);
-    -webkit-backdrop-filter: blur(22px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.85);
-    box-shadow:
-      0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
-      0 2px 8px -2px rgba(15, 23, 42, 0.06),
-      0 16px 40px -16px rgba(15, 23, 42, 0.12);
-  }
-
-  .glass-surface-soft {
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    box-shadow:
-      0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
-      0 8px 24px -10px rgba(15, 23, 42, 0.08);
-  }
-
-  .glass-highlight::before {
-    content: none;
-  }
-
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-/* === Pixel Retro (ragwatson) === */
+/* === Pixel Retro (ragwatson — titanic/login/signup 페이지) === */
 
 /* 밤하늘 별 배경 */
 .starfield {
@@ -110,7 +75,6 @@ body {
   background-size: 360px 260px, 360px 260px, 360px 260px, 360px 260px, 360px 260px, 360px 260px, 360px 260px, 360px 260px, 360px 260px, 360px 260px, 360px 260px, 360px 260px, 100% 100%;
 }
 
-/* 픽셀 파도 (오션 패턴) */
 .ocean {
   background-color: #0A2540;
   background-image:
@@ -120,29 +84,23 @@ body {
   background-size: 32px 32px, 32px 32px, 32px 32px;
 }
 
-/* 달빛이 바다에 반사되는 그라디언트 */
 .moonlight-water {
   background:
     radial-gradient(ellipse 200px 60px at 50% 0%, rgba(255,200,87,0.35), transparent 70%),
     linear-gradient(180deg, #0A2540 0%, #050E22 100%);
 }
 
-/* 픽셀 별 (작은 점) */
 .pixel-star {
   width: 4px;
   height: 4px;
   background: #FFE873;
   position: absolute;
-  box-shadow:
-    0 0 0 1px rgba(255, 232, 115, 0.4);
+  box-shadow: 0 0 0 1px rgba(255, 232, 115, 0.4);
 }
 
-/* 따뜻한 창문 불빛 (배의 포트홀) */
 .porthole-light {
   background: #FFC857;
-  box-shadow:
-    0 0 8px #FF8C42,
-    0 0 16px rgba(255, 200, 87, 0.4);
+  box-shadow: 0 0 8px #FF8C42, 0 0 16px rgba(255, 200, 87, 0.4);
 }
 
 /* 타이타닉 항해 + 침몰 */
@@ -191,18 +149,8 @@ body {
   100%    { opacity: 0; }
 }
 
-.animate-explosion {
-  animation: explosion 22s ease-in-out infinite;
-}
-.animate-explosion-aftershock {
-  animation: explosion-aftershock 22s ease-in-out infinite;
-}
 .animate-ship-crack {
   animation: ship-crack 22s ease-in-out infinite;
-}
-.animate-fire-flicker {
-  animation: fire-flicker 0.6s ease-in-out infinite;
-  transform-origin: center bottom;
 }
 
 /* 깜빡이는 커서 효과 */
@@ -223,9 +171,6 @@ body {
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
-  }
-  .prose pre {
-    border-radius: 0;
   }
   .pixel-text {
     font-family: var(--font-press-start), "Galmuri11", "Galmuri14", var(--font-noto), monospace;

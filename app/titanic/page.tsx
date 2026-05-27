@@ -93,7 +93,7 @@ export default function HomePage() {
       ))}
 
       {/* 메인 컨텐츠 */}
-      <div className="relative z-10 flex flex-col items-center pt-20 pb-48 px-6">
+      <div className="relative z-10 flex flex-col items-center pt-14 sm:pt-20 pb-32 sm:pb-48 px-4 sm:px-6">
         <h1 className="pixel-text text-5xl sm:text-7xl text-accent text-center leading-relaxed text-shadow-glow animate-flicker">
           TITANIC
         </h1>
@@ -117,19 +117,19 @@ export default function HomePage() {
                 {weather.city}
               </span>
             </div>
-            <div className="px-4 py-3 flex items-center justify-between gap-3">
+            <div className="px-3 sm:px-4 py-3 flex items-center justify-between gap-2 sm:gap-3">
               <div className="flex flex-col">
-                <span className="pixel-text text-[8px] text-accent/70">
+                <span className="pixel-text text-[8px] text-accent/70 hidden sm:block">
                   {now
                     ? `${now.getFullYear()}.${pad2(now.getMonth() + 1)}.${pad2(now.getDate())} ${DAYS_KR[now.getDay()]}`
                     : ""}
                 </span>
-                <span className="pixel-text text-base sm:text-lg text-accent leading-tight mt-1">
+                <span className="pixel-text text-base sm:text-lg text-accent leading-tight sm:mt-1">
                   {now ? `${pad2(now.getHours())}:${pad2(now.getMinutes())}` : "--:--"}
                 </span>
               </div>
 
-              <div className="w-1 h-10 bg-accent/40" />
+              <div className="hidden sm:block w-1 h-10 bg-accent/40" />
 
               <div className="flex flex-col">
                 <span className="pixel-text text-sm sm:text-base text-accent leading-none">
@@ -143,18 +143,18 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <div className="w-1 h-10 bg-accent/40" />
+              <div className="hidden sm:block w-1 h-10 bg-accent/40" />
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 {weather.icon && (
                   <img
                     src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
                     alt={weather.description ?? ""}
-                    className="h-10 w-10 sm:h-12 sm:w-12"
+                    className="h-9 w-9 sm:h-12 sm:w-12"
                     style={{ imageRendering: "pixelated" }}
                   />
                 )}
-                <span className="pixel-text text-[10px] text-accent max-w-[80px] sm:max-w-[120px]">
+                <span className="pixel-text text-[10px] text-accent hidden sm:inline max-w-[120px]">
                   {weather.description}
                 </span>
               </div>
